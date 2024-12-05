@@ -8,7 +8,6 @@ load(file="C:/Users/hyama/Documents/MSplusR/Posi_Ida_Chlamydomonas_1_spec.rds")
 # ---  filtering ---------
 X <- X0
 X[X<1000] <- 0 # intensityが1000以下のものは削除
-# 可能であれば、最初のスペクトルの時点でこの処理をしておく
 
 X[X>0] <- 1 # intensityに値が入っているときには1にする
 
