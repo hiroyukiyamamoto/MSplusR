@@ -17,7 +17,7 @@ for(i in 1:nrow(X)){
   x[x<0.01] <- 0 # 1%未満のintensityは0にする
   X[i,] <- x
 }
-#X[X>0] <- 1 # intensityに値が入っているときには1にする
+X[X>0] <- 1 # intensityに値が入っているときには1にする
 
 save(X, file="C:/R/X_pca.rds")
 
