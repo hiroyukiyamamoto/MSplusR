@@ -93,7 +93,7 @@ create_shiny_umap_viewer <- function(umap_file, spectra_file, app_title = "UMAP 
   }
   
   # アプリの実行
-  shinyApp(ui, server)
+  shiny::runApp(shinyApp(ui, server))
 }
 
 # 使用例

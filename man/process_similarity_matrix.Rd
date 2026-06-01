@@ -1,68 +1,90 @@
 \name{process_similarity_matrix}
 \alias{process_similarity_matrix}
-\title{Process Similarity Matrix from Spectral Data}
+\title{Build a Similarity Matrix from Spectral Data}
 \description{
-This function filters intensity data from a spectral matrix, normalizes it, and computes a similarity matrix based on common peaks between spectra. The resulting matrix is saved to a file.
+Filter spectral data, binarize it, optionally apply IDF-only weighting, and
+compute a similarity matrix.
 }
 \usage{
-process_similarity_matrix(input_file, output_file = "Z_common.rds", 
-                          intensity_threshold = 1000, 
-                          normalization_threshold = 0.01)
+process_similarity_matrix(
+  input_file,
+  output_file = "Z_common.rds",
+  intensity_threshold = 1000,
+  normalization_threshold = 0.01,
+  weighting_method = c("none", "idf_only"),
+  similarity_method = c("cosine", "common_peaks")
+)
 }
 \arguments{
   \item{input_file}{
-    The file path to the input \code{.rds} file containing the spectral data matrix (\code{X0}).
+    Path to the input file containing \code{X0}.
   }
   \item{output_file}{
-    The file path where the resulting similarity matrix will be saved. Default is \code{"Z_common.rds"}.
+    Path to the output file where the similarity matrix will be saved.
   }
   \item{intensity_threshold}{
-    A numeric value for the intensity threshold below which values are set to 0 (noise filtering). Default is 1000.
+    Absolute intensity threshold. Values below this threshold are set to 0.
   }
   \item{normalization_threshold}{
-    A numeric value for the normalization threshold. Values below this threshold (relative to the maximum intensity of each spectrum) are set to 0. Default is 0.01.
+    Relative intensity threshold after row-wise base-peak normalization.
+  }
+  \item{weighting_method}{
+    Weighting applied after binarization. Use \code{"none"} or
+    \code{"idf_only"}.
+  }
+  \item{similarity_method}{
+    Similarity metric. Use \code{"common_peaks"} for weighted common-peak
+    similarity or \code{"cosine"} for cosine similarity on the processed
+    matrix.
   }
 }
 \details{
-This function processes a spectral data matrix (\code{X0}) loaded from the input file. 
-The steps are as follows:
+The function performs the following steps:
 \itemize{
-  \item Values below \code{intensity_threshold} are set to 0.
-  \item Each spectrum is normalized by its maximum intensity.
-  \item Values below \code{normalization_threshold} after normalization are set to 0.
-  \item Non-zero values in the matrix are replaced with 1.
-  \item A similarity matrix is computed as the number of common peaks between spectra.
+  \item Filters low-intensity values.
+  \item Normalizes each spectrum by its maximum intensity.
+  \item Removes values below the relative threshold.
+  \item Binarizes the matrix.
+  \item Optionally applies IDF-only weighting.
+  \item Computes a similarity matrix using either weighted common peaks or
+  cosine similarity.
 }
-The similarity matrix is saved to the specified output file.
+
+For the current graph-based route, a practical initial setting is:
+\itemize{
+  \item \code{weighting_method = "idf_only"}
+  \item \code{similarity_method = "common_peaks"}
+}
 }
 \value{
-A numeric similarity matrix where each element represents the number of common peaks between two spectra.
+A numeric similarity matrix.
 }
 \author{
 Hiroyuki Yamamoto
 }
 \examples{
-# Example usage:
-# Define input and output file paths
-input_file <- system.file("extdata", "example_spec.rds", package = "YourPackageName")
-output_file <- tempfile(fileext = ".rds")  # Temporary file for demonstration
-
-# Process similarity matrix
-result <- process_similarity_matrix(
-  input_file = input_file,
-  output_file = output_file,
-  intensity_threshold = 1000,
-  normalization_threshold = 0.01
+# Bundled demo data
+spectra_file <- system.file(
+  "extdata",
+  "Posi_Ida_Chlamydomonas_1_spec.rds",
+  package = "MSplusR"
 )
 
-# View the resulting similarity matrix
-print(result)
+similarity_file <- tempfile(fileext = ".rds")
 
-# Note: Replace `YourPackageName` with the actual name of your package,
-# and ensure the example_spec.rds file is included in your package's extdata directory.
+Z <- process_similarity_matrix(
+  input_file = spectra_file,
+  output_file = similarity_file,
+  intensity_threshold = 1000,
+  normalization_threshold = 0.01,
+  weighting_method = "idf_only",
+  similarity_method = "common_peaks"
+)
+
+dim(Z)
 }
 \seealso{
-\code{\link[Matrix]{Matrix}} for sparse matrix operations.
+\code{\link{filter_intensity_matrix}}, \code{\link{process_graph_umap}}
 }
 \keyword{spectral}
 \keyword{similarity}

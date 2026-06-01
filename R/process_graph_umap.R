@@ -1,7 +1,7 @@
-process_graph_umap <- function(input_spectrum_file, input_similarity_file, 
-                               output_umap_file = "umap_graph.rds", 
-                               output_subset_file = "subset_spectra.rds", 
-                               min_peaks = 3, n_components = 10) {
+process_graph_umap <- function(input_spectrum_file, input_similarity_file,
+                               output_umap_file = "umap_graph.rds",
+                               output_subset_file = "subset_spectra.rds",
+                               edge_threshold = NULL, n_components = 10) {
   # 必要なパッケージをロード
   if (!requireNamespace("uwot", quietly = TRUE)) {
     stop("The 'uwot' package is required. Please install it.")
@@ -20,11 +20,19 @@ process_graph_umap <- function(input_spectrum_file, input_similarity_file,
     stop("入力ファイルに 'X0' または 'Z' オブジェクトが含まれていません。")
   }
   
+  # similarity_method_used が保存されていれば読み込む（なければ "common_peaks" と仮定）
+  if (!exists("similarity_method_used")) similarity_method_used <- "common_peaks"
+
+  # edge_threshold の自動設定
+  if (is.null(edge_threshold)) {
+    edge_threshold <- if (identical(similarity_method_used, "cosine")) 0.3 else 3
+  }
+
   # グラフ隣接行列を作成
-  diag(Z) <- 0  # 対角成分を0に
+  diag(Z) <- 0
   W <- Z
-  W[W < min_peaks] <- 0  # 共通ピーク数が min_peaks 未満の場合は接続を削除
-  W[W > 0] <- 1  # 接続の有無をバイナリに変更
+  W[W < edge_threshold] <- 0
+  W[W > 0] <- 1
   
   # 接続がないノードを除外
   N <- as.numeric(apply(W, 2, sum))

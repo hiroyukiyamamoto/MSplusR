@@ -1,7 +1,7 @@
 Package: MSplusR
 Type: Package
 Title: Tools for Metabolomics Data Processing and Analysis
-Version: 0.1.0
+Version: 0.1.5
 Authors@R: 
     person(given = "Hiroyuki",
            family = "Yamamoto",
@@ -18,6 +18,8 @@ Imports:
     irlba,
     shiny,
     plotly,
+    httr,
+    jsonlite,
     Matrix,
     igraph
 License: CC BY-NC-ND 4.0
