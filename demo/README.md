@@ -1,6 +1,6 @@
 # demo
 
-このフォルダは、`MSplusR` の発表用図、`Mass++` 連携用スクリプト、そして実行に必要な最小データ一式をまとめたデモ用フォルダです。
+このフォルダは、`MSplusR` の図、`Mass++` 連携用スクリプト、そして実行に必要な最小データ一式をまとめたデモ用フォルダです。
 
 ## スクリプトと条件の対応
 
@@ -45,7 +45,7 @@
 source("~/R/MSplusR_github/demo/prepare_deig_idfonly_viewer_cache.R")
 ```
 
-### 2. 発表用図を作る / Mass++ viewer を開く
+### 2. 図を作る / Mass++ viewer を開く
 
 ```r
 source("~/R/MSplusR_github/demo/deig_idfonly_presentation_plot.R")
@@ -87,5 +87,5 @@ source("~/R/MSplusR_github/demo/send_same_ms1_group_to_masspp.R")
 
 ## 補足
 
-- `deig_idfonly_presentation_plot.R` は、`1〜10` の番号付き same-MS1 群を表示する発表用スクリプトです
+- `deig_idfonly_presentation_plot.R` は、`1〜10` の番号付き same-MS1 群を表示するスクリプトです
 - `prepare_deig_idfonly_viewer_cache.R` を実行していないと、viewer 起動時に必要な cache がありません
